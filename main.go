@@ -1,21 +1,20 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"time"
 )
 
-var errRequestFailed = errors.New("Request failed")
-
 func main() {
-	go sexyCount("nico")
-	sexyCount("flynn")
+	c := make(chan bool)
+	people := [2]string{"nico", "flynn"}
+	for _, person := range people {
+		go isSexy(person, c)
+	}
+	result := <-c
+	fmt.Println(result)
 }
 
-func sexyCount(person string) {
-	for i := 0; i < 10; i++ {
-		fmt.Println(person, "is sexy ", i)
-		time.Sleep(time.Second)
-	}
+func isSexy(person string, c chan bool) {
+	// time.Sleep(time.Second * 5)
+	c <- true
 }
